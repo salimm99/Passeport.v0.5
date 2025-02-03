@@ -126,27 +126,32 @@
             <p class="mb-2">Saisir l'adresse  du requérant.</p>
             <!-- Numéro et Rue -->
             <div class="flex mb-4">
-              <div class="w-1/5 pr-2 input-container" style="position: relative;">
+
+              <div class="w-1/2 pr-2 input-container" style="position: relative;">
                 <label for="numero" class="block text-sm font-medium">Numéro de rue</label>
                 <input required type="text" id="numero_rue_residence" name="numero_rue_residence" 
                 class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" 
                 data-pattern="^[0-9][0-9a-zA-Z]{0,9}$" data-error-message=" "
                 />
               </div>
-              <div class="w-3/5 pl-2 input-container" style="position: relative;">
-                <label for="rue_residence" class="block text-sm font-medium">Rue</label>
-                <input required type="text" id="rue_residence" name="rue_residence" 
-                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" 
-                data-pattern="^[A-Za-zÀ-ÖØ-öø-ÿ0-9 ,'-]{3,80}$" data-error-message="'Rue' doit contenir de 3 à 80 caractères alpha-numériques"
-                />
-              </div>
-              <div class="w-1/5 pl-2 input-container" style="position: relative;">
+
+              <div class="w-1/2 pl-2 input-container" style="position: relative;">
                 <label for="appartement" class="block text-sm font-medium">Appartement</label>
                 <input type="text" id="appartement" name="appartement" 
                 class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" 
                 data-pattern="^[0-9][0-9a-zA-Z]{0,9}$" data-error-message=" "
                 />
               </div>
+            </div>
+            <div class="mb-4">
+              <div class="pl-2 input-container" style="position: relative;">
+                <label for="rue_residence" class="block text-sm font-medium">Rue</label>
+                <input required type="text" id="rue_residence" name="rue_residence" 
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" 
+                data-pattern="^[A-Za-zÀ-ÖØ-öø-ÿ0-9 ,'-]{3,80}$" data-error-message="'Rue' doit contenir de 3 à 80 caractères alpha-numériques"
+                />
+              </div>
+         
             </div>
           
             <!-- Ville et Code Postal -->
@@ -581,18 +586,27 @@
           <h2 class="-mt-5 mb-4"> Personne à ajouter au rendez-vous. <strong id="numero_pattern"></strong> </h2>
           <label class="block flex justify-end">
             <input type="checkbox" data-action="personHasSameName" id="meme_nom_pattern" class="ml-3"/>
-            &nbsp;&nbsp; Cette personne porte le même nom de famille que le requérant.              
+            &nbsp;&nbsp; Cette personne porte le même nom que le requérant.              
           </label>
 
-          <span class="input-container" style="position: relative;">
-            <input type="text" id="additionnal_lastname_pattern" name="Nom personne supplémentaire_pattern" class="lastname m-1 w-64 p-2 border border-gray-700 rounded-md shadow-sm placeholder-color-gray-700" placeholder="Nom"  data-pattern="^[A-Z][a-zA-Z' -]{2,49}$" data-error-message="3 à 50 lettres" required/>
-          </span>
-          <span class="input-container" style="position: relative;">
-            <input type="text" id="additionnal_firstname_pattern" name="Prénom personne supplémentaire_pattern" class="firstname m-1 w-48 p-2 border border-gray-700 rounded-md shadow-sm" placeholder="Prénom"  data-pattern="^[A-Z][a-zA-Z' -]{2,49}$" data-error-message="3 à 50 lettres" required/>
-          </span>
-          <span class="input-container" style="position: relative;">
-            <input type="date" id="additionnal_age_pattern" name="Date-Naissance personne supplémentaire_pattern"  class="age m-1 w-36 p-2 border border-gray-700 rounded-md shadow-sm" placeholder="Date de naissance" required/>
-          </span>
+          <div class="input-container" style="position: relative;">
+            <label class="block text-sm font-medium">Nom</label>
+            <input type="text" id="additionnal_lastname_pattern" 
+            name="Nom personne supplémentaire_pattern" 
+            class="lastname m-1 p-2 border border-gray-700 rounded-md shadow-sm placeholder-color-gray-700" placeholder="Nom"  data-pattern="^[A-Z][a-zA-Z' -]{2,49}$" data-error-message="De 3 à 50 lettres commencant par une majuscule" required/>
+          </div>
+          <div class="input-container" style="position: relative;">
+            <label class="block text-sm font-medium">Prénom</label>
+            <input type="text" id="additionnal_firstname_pattern" 
+            name="Prénom personne supplémentaire_pattern" 
+            class="firstname m-1 p-2 border border-gray-700 rounded-md shadow-sm" placeholder="Prénom"  data-pattern="^[A-Z][a-zA-Z' -]{2,49}$" data-error-message="De 3 à 50 lettres commencant par une majuscule" required/>
+          </div>
+          <div class="input-container" style="position: relative;">
+            <label  class="block text-sm font-medium">Date de naissance</label>
+            <input type="date" id="additionnal_age_pattern" 
+            name="Date-Naissance personne supplémentaire_pattern"  
+            class="age m-1 p-2 border border-gray-700 rounded-md shadow-sm" placeholder="Date de naissance" required/>
+          </div>
 
       </div>
 
