@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demande de Rendez-vous Passeport</title>
+    <script src="javascript/jquery/jquery.min.js"></script>
+    <link href="style/tailwind.css" rel="stylesheet" />
+    <link href="style/wizard.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  </head>
+  <body class="bg-gray-100 p-5">
+    <div data-component="smart-wizard" class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-bold mb-8">Demande de Rendez-vous Passeport</h2>
+      <form id="appointmentForm">
+
+ 
+
+        <!-- Step renseignement-personne -->
+        <div data-step data-navigation="next" data-step-name="renseignement-personne">
+          <h2 class="text-xl font-semibold mb-4"><i class="step-number"></i> - Qui est le requérant</h2>
+          <p class="mb-2">Veuillez remplir les informations personnelles du requérant.</p>
+          <div class="mb-4 input-container" style="position: relative;">
+            <label for="nom" class="block text-sm font-medium">Nom</label>
+            <input type="text" id="nom" name="nom" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required 
+            data-pattern="^[A-Z][a-zA-Z' -]{2,49}$" data-error-message="Le 'Nom' doit contenir de 3 à 50 caractères alphabétiques et commencer par une majuscule"
+             />
+             <!--span class="required-alert "><i class="fa fa-star"></i></span-->
+          </div>
+          <div class="mb-4 input-container" style="position: relative;">
+            <label for="prenom" class="block text-sm font-medium">Prénom</label>
+            <input type="text" id="prenom" name="prenom" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"  required
+            data-pattern="^[A-Z][a-zA-Z' -]{2,49}$" data-error-message="Le prénom doit contenir de 3 à 50 caractères alphabétiques et commencer par une majuscule"
+            />
+          </div>
+         
+
+          <div class="flex mb-4">
+          <div class="w-1/2 pr-2 input-container" style="position: relative;">
+            <label for="sexe" class="block text-sm font-medium">Sexe</label>
+            <select id="sexe" name="sexe" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+              <option selected disabled value="">Sélectionnez une option</option>
+              <option value="Masculin">Masculin</option>
+              <option value="Féminin">Féminin</option>
+            </select>
+          </div>
+
+            <div class="w-1/2 pl-2 input-container" style="position: relative;">
+              <label for="date_naissance" class="block text-sm font-medium">Date de naissance</label>
+              <label style="position: absolute; top: 0; right:10px;">
+                <input type="checkbox" id="naissance_presume" data-event="change" data-action="changePresumedBorn"  />
+                Naissance Présumée
+              </label>
+
+              <div id="full-birth-date" class="">
+                    <input type="date" id="date_naissance" name="date de naissance" 
+                    data-action="setBirthDate" 
+                    data-event="change"
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required  />
+              </div>
+
+              <div id="year-birth-date" class="hidden">
+                <input type="text" id="presumed_born" name="Année de naissance présumée" 
+                placeholder="Année de naissance présumée"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"  required
+                data-pattern="^(19[0-9]{2}|20[0-9]{2})$" data-error-message="Année incorrecte"
+                />
+              </div>
+         
+            </div>
+          </div>
+        </div>
+
+               <!-- Step nombre-de-personnes-rdv -->
+               <div data-step data-navigation="full" data-step-name="nombre-de-personnes-rdv" class="step hidden">
+                <h2 class="text-xl font-semibold mb-4"><i class="step-number"></i> - Combien de personnes pour ce rendez-vous?</h2>
+                <p class="mb-2">
+                  Afin de faciliter vos déplacements, nous vous offrons la possibilité d'ajouter les membres de votre famille (conjoint, enfants ou parents directs) dans le même rendez-vous.
+                </p>
+                <div class="mb-4 input-container" style="position: relative;" >
+                  <label class="block text-sm font-medium">Combien serez-vous?</label>
+                  <div class="mt-1 block">
+                    <select required id="membres_famille" name="membres_de_la_famille" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+                      <option value="" disabled selected>Sélectionnez une option</option>
+                      <option value="1_Personne">Moi seulement</option>
+                      <option value="plusieurs_personnes" data-activate-field="precision_nombre_personnes">Moi et d'autres membres de ma famille</option>
+                    </select>
+                  </div>
+              
+                  <div id="precision_nombre_personnes" class="hidden">
+                    <div class="mb-4 pt-8">
+                      <label class="block text-sm font-medium">Combien de personnes de votre familles vont vous accompagner à ce rendez-vous ?</label>
+                      <button type="button" id="valider_nombre_personnes" data-action="addAdditionnalPerson" class="bg-green-700 text-white p-2 ml-5 mr-12 rounded-md">Ajouter une personne</button>   
+                      <input type="number" id="nombre_personnes" disabled name="nombre_personnes" value="0"  min="1" max="5" class="p-2 m-2 rounded-md border border-gray-700 " />
+                          
+                    </div>
+              
+                    <div id="personnes_supplémentaires">
+                        <!-- Additionnal persons here -->
+
+                    </div>
+                  </div>
+                </div>
+
+              
+              </div>
+
+
+        <!-- Step -->
+        <div data-step data-navigation="full" data-step-name="coordonnees" class="step hidden">
+          <h2 class="text-xl font-semibold mb-4"><i class="step-number"></i> - Coordonnées </h2>
+          <p class="mb-2">Saisir l'email et le téléphone du requérant.</p>
+          <div class="mb-4 input-container" style="position: relative;">
+            <label for="email" class="block text-sm font-medium">Email</label>
+            <input required type="email" id="email" name="email" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+            data-pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" data-error-message="Veuillez entrer une adresse email valide." />
+          </div>
+
+          <div class="mb-4 input-container" style="position: relative;">
+            <label for="telephone" class="block text-sm font-medium">Numéro de téléhone</label>
+            <input required type="text" id="telephone" name="telephone" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+            data-pattern="^(\+1\s?)?(\(\d{3}\)|\d{3})[\s.-]?\d{3}[\s.-]?\d{4}$" data-error-message="Veuillez entrer un numéro de téléphone valide." />
+          </div>
+
+          <div class="space-y-4">
+            <p class="mb-2">Saisir l'adresse  du requérant.</p>
+            <!-- Numéro et Rue -->
+            <div class="flex mb-4">
+              <div class="w-1/5 pr-2 input-container" style="position: relative;">
+                <label for="numero" class="block text-sm font-medium">Numéro de rue</label>
+                <input required type="text" id="numero_rue_residence" name="numero_rue_residence" 
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" 
+                data-pattern="^[0-9][0-9a-zA-Z]{0,9}$" data-error-message=" "
+                />
+              </div>
+              <div class="w-3/5 pl-2 input-container" style="position: relative;">
+                <label for="rue_residence" class="block text-sm font-medium">Rue</label>
+                <input required type="text" id="rue_residence" name="rue_residence" 
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" 
+                data-pattern="^[A-Za-zÀ-ÖØ-öø-ÿ0-9 ,'-]{3,80}$" data-error-message="'Rue' doit contenir de 3 à 80 caractères alpha-numériques"
+                />
+              </div>
+              <div class="w-1/5 pl-2 input-container" style="position: relative;">
+                <label for="appartement" class="block text-sm font-medium">Appartement</label>
+                <input type="text" id="appartement" name="appartement" 
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" 
+                data-pattern="^[0-9][0-9a-zA-Z]{0,9}$" data-error-message=" "
+                />
+              </div>
+            </div>
+          
+            <!-- Ville et Code Postal -->
+            <div class="flex mb-4">
+              <div class="w-1/2 pr-2 input-container" style="position: relative;">
+                <label for="ville_residence" class="block text-sm font-medium">Ville</label>
+                <input required type="text" id="ville_residence" name="ville_residence" 
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" 
+                data-pattern="^[A-Za-zÀ-ÖØ-öø-ÿ0-9 '-]{1,50}$" data-error-message="'Ville': 2 à 50 caractères alpha-numériques."
+                />
+              </div>
+              <div class="w-1/2 pl-2 input-container" style="position: relative;">
+                <label for="code_postal_residence" class="block text-sm font-medium">Code Postal</label>
+                <input required type="text" id="code_postal_residence" name="code_postal_residence" 
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" data-event="change" data-action="presetProvince"
+                data-pattern="^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$" data-error-message="Format de 'Code postal' invalide."
+                 />
+              </div>
+            </div>
+          
+            <!-- Province et Pays -->
+            <div class="flex mb-4">
+              <div class="w-1/2 pr-2 input-container" style="position: relative;">
+                <label for="province_residence" class="block text-sm font-medium">Province</label>
+                <select required id="province_residence" name="province_residence"  
+                        data-source="provinces"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" >
+                  <option value="" disabled selected>Sélectionner une province</option>
+                  <!-- liste des pays ici -->
+                </select>
+
+                <!--input required type="text" id="province_residence" name="province_residence"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" 
+                data-pattern="^[A-Za-zÀ-ÖØ-öø-ÿ0-9 '-,()]{2,50}$" data-error-message="'Province' : de 3 à 50 caractères alpha-numériques."
+                /-->
+              </div>
+              <div class="w-1/2 pl-2 input-container" style="position: relative;">
+                <label for="pays" class="block text-sm font-medium">Pays</label>                
+                <select
+                id="pays_residence"               
+                name="pays_residence" 
+                disabled
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" 
+              >
+                <option value="Canada" disabled selected>Canada</option>
+             
+              </select>
+              </div>
+            </div>          
+          </div>
+
+        </div>
+        <!-- Step 3 -->
+        <div data-step data-navigation="full" data-step-name="lieu-de-naissance" class="step hidden">
+          <h2 class="text-xl font-semibold mb-4"><i class="step-number"></i> - Lieu de naissance</h2>
+          <p class="mb-2">Veuillez fournir des informations sur votre lieu de naissance.</p>
+          <div class="mb-4 input-container" style="position: relative;">
+            <label for="pays_naissance" class="block text-sm font-medium">Pays de naissance</label>
+            <select required
+              id="pays_naissance"
+              data-source="coutries"
+              name="pays_naissance"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+            >
+              <option value="" disabled selected>Sélectionner un pays</option>
+              <!-- liste des pays ici -->
+            </select>
+          </div>
+
+          <div id="lieu_naissance_algerie" class="hidden">
+            <div class="mb-4 input-container" style="position: relative;">
+              <label for="wilaya_naissance" class="block text-sm font-medium">Wilaya</label>
+              <select required id="wilaya_naissance" name="wilaya_naissance" data-source="wilayas" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" >
+                <option value="" disabled selected>Sélectionner une wilaya</option>
+                  <!-- liste des wilayas ici -->
+              </select>      
+            </div>
+            <div class="mb-4 input-container" style="position: relative;">
+              <label for="commune" class="block text-sm font-medium">Commune</label>
+              <input required type="text" id="nom_commune" name="commune" 
+              data-pattern="^[A-Za-zÀ-ÖØ-öø-ÿ0-9 '-]{2,50}$" data-error-message="'Commune' : de 3 à 50 caractères alphabétiques et commencer par une majuscule"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" />
+            </div>
+          </div>
+
+          <div id="lieu_naissance_etranger" class="hidden" >
+            <div class="mb-4 input-container" style="position: relative;">
+              <label for="consulat" class="block text-sm font-medium">Consulat de transciption</label>
+              <input required type="text" id="consulat" name="consulat" data-error-message=" " 
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" 
+              placeholder="Saisir le nom (ville) du consulat émetteur"
+              />
+            </div>
+          </div>
+          <div class="mb-4 input-container" style="position: relative;">
+            <label for="situation_familiale" class="block text-sm font-medium">Situation familiale</label>
+            <select required id="situation_familiale" name="situation_familiale" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+              <option value="" disabled selected>Sélectionnez une option</option>
+              <option value="Célibataire">Célibataire</option>
+              <option value="Marié(e)">Marié(e)</option>
+              <option value="Divorcé(e)">Divorcé(e)</option>
+              <option value="Veuf(ve)">Veuf(ve)</option>
+            </select>
+          </div>
+
+
+        </div>
+
+
+
+
+        <!-- Step statut-au-canada -->
+        <div data-step data-navigation="full" data-step-name="statut-au-canada" class="step hidden">
+          <h2 class="text-xl font-semibold mb-4"><i class="step-number"></i> - Statut au Canada</h2>
+          <p class="mb-2">Veuillez fournir des informations sur votre situation actuelle.</p>
+          <div class="mb-4 input-container" style="position: relative;">
+            <label for="situation_canada" class="block text-sm font-medium">Situation actuelle au Canada</label>
+            <select required id="situation_canada" name="situation_canada" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+              <option value="" disabled selected>Sélectionnez une option</option>  
+              <option value="Étudiant-Permis-Études" data-activate-field="precision_validite_permis_etudes">Permis d'études</option>            
+              <option value="Travailleur-avec-Permis" data-activate-field="precision_validite_permis_travail, info_situation_professionnelle">Permis de Travail</option>
+              <option value="Résident-Permanent" data-activate-field="precision_validite_residence_permanente, info_situation_professionnelle">Résidence Permanente</option>
+              <option value="Algéro-Canadien" data-activate-field="info_situation_professionnelle">Bi-National (Citoyen Algérien et Canadien)</option>             
+              <option value="Visiteur" data-activate-field="precision_validite_visa">Visiteur</option>              
+              <option value="Autre" data-activate-field="precision_situation_administrative, info_situation_professionnelle">Autre (Précisez votre cas)</option>
+            </select>
+          </div>
+
+          <div id="precision_validite_visa" class="hidden">
+            <div class="mb-4 input-container" style="position: relative;">
+              <label class="block text-sm font-medium">Votre visa de visiteur est-il en cours de validité ?</label>
+              <input type="radio" id="visa_valide" name="validite_visa" value="Visa en cours de valide" />
+              <label for="visa_valide">Mon visa est en cours de validité</label><br />
+              <input type="radio" id="visa_non_valide" name="validite_visa" value="Visa est échu (expiré)" />
+              <label for="visa_non_valide">Mon visa est échu (expiré)</label><br />
+            </div>
+          </div>
+
+          <div id="precision_validite_residence_permanente" class="hidden">
+            <div class="mb-4 input-container" style="position: relative;">
+              <label class="block text-sm font-medium">Votre résidence permanente est-elle en cours de validité ?</label>
+              <input type="radio" id="residence_permanente_valide" name="residence_permanente_valide" value="Résidence permanente valide" />
+              <label for="residence_permanente_valide">Ma résidence permanente est en cours de validité</label><br />
+              <input type="radio" id="residence_permanente_non_valide" name="residence_permanente_valide" value="Résidence permanente échue (expirée)" />
+              <label for="residence_permanente_non_valide">Ma résidence permanente est échue (expirée)</label><br />
+            </div>
+          </div>
+
+          <div id="precision_validite_permis_travail" class="hidden">
+            <div class="mb-4 input-container" style="position: relative;">
+              <label class="block text-sm font-medium">Votre permis de travail est-il en cours de validité ?</label>
+              <input type="radio" id="permis_travail_valide" name="validité_permis_travail" value="Permis de travail valide" />
+              <label for="permis_travail_valide">Mon permis de travail est en cours de validité</label><br />
+              <input type="radio" id="permis_travail_non_valide" name="validité_permis_travail" value="Permis de travail échu (expiré)" />
+              <label for="permis_travail_non_valide">Mon permis de travail est échu (expiré)</label><br />
+            </div>
+          </div>
+
+          <div id="precision_validite_permis_etudes" class="hidden">
+            <div class="mb-4 input-container" style="position: relative;">
+              <label class="block text-sm font-medium">Votre permis d'études est-il en cours de validité ?</label>
+              <input type="radio" id="permis_etudes_valide" name="valide_permis_etudes" value="Permis d'études valide" />
+              <label for="permis_etudes_valide">Mon permis d'études est en cours de validité</label><br />
+              <input type="radio" id="permis_etudes_non_valide" name="valide_permis_etudes" value="Permis d'études échu (expiré)" />
+              <label for="permis_etudes_non_valide">Mon permis d'études est échu (expiré)</label><br />
+            </div>
+          </div>
+
+          <div id="precision_situation_administrative" class="hidden">
+            <div class="mb-4 input-container" style="position: relative;">
+              <label for="precision_situation_canada" class="block text-sm font-medium">Précisez votre situation (moins de 100 caractères)</label>
+              <textarea
+                type="text"
+                id="precision_situation_canada"
+                name="precision_situation_canada"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+              ></textarea>
+            </div>
+          </div>
+
+          <div id="info_situation_professionnelle" class="mb-4 hidden input-container" style="position: relative;">
+            <label for="situation_professionnelle" class="block text-sm font-medium">Situation professionnelle</label>
+            <select
+              id="situation_professionnelle"
+              name="situation_professionnelle"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+              required
+            >
+              <option disabled selected value="">Sélectionnez une option</option>
+              <option value="Sans-Emploi">Sans-Emploi</option>
+              <option value="En-emploi">Employé</option>
+              <option value="Etudiant">Étudiant</option>
+              <option value="Travailleur-indépendant">Travailleur Indépendant</option>
+              <option value="Entrepreneur">Entrepreneur</option>              
+              <option value="Autre" data-activate-field="precision_situation_professionnelle">Autre (Précisez votre cas)</option>
+            </select>
+          </div>
+
+          <div id="precision_situation_professionnelle" class="hidden input-container" style="position: relative;">
+            <div class="mb-4">
+              <label for="precision_profession" class="block text-sm font-medium">Précisez votre situation (moins de 100 caractères)</label>
+              <textarea
+                id="precision_profession"
+                name="precision_profession"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+              >
+              </textarea>
+            </div>
+          </div>
+
+        </div>
+        <!-- Step 4 -->
+        <div data-step data-navigation="full" data-step-name="situation-vs-consulat" class="step hidden">
+          <h2 class="text-xl font-semibold mb-4">6 - immatriculation (au consulat)</h2>
+          <p class="mb-2">Veuillez répondre aux questions concernant votre immatriculation (ou non) au consulat d'Algérie à Montréal</p>
+          
+          <div class="mb-4  input-container" id="immatriculation-requerant" style="position: relative;">
+            <label for="requerant-immatricule" class="block text-sm font-medium">Le requérant est-il (elle) immatriculé(e) au consulat de Montréal ?</label>
+            <select id="requerant-immatricule" name="requerant-immatricule" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+              <option disabled selected>Sélectionnez une option</option>
+              <option data-activate-field="situation-vs-consulat" value="oui">Je suis immatriculé au consulat de Montréal</option>
+              <option data-activate-field="non_immatricule" value="non">Je ne suis pas immatriculé à Montréal</option>
+            </select>
+          </div>
+
+          <div class="mb-4 hidden  input-container" id="immatriculation-tuteur" style="position: relative;">
+            <p> Nous basant sur la <strong>date de naissance</strong> que vous avez fourni, nous avons déterminé <strong>que le (la) requérant(e) agé(e) de moins de 19 ans</strong>. Vous devez fournir les informations suivantes sur <strong>l'immatriculation du tuteur légal</strong> (père ou mère)</p>
+            <label for="tuteur-immatricule" class="block text-sm font-medium">Le tuteur légal est-il (elle) immatriculé(e) au consulat de Montréal ?</label>
+            <select id="tuteur-immatricule" name="tuteur-immatricule" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+              <option disabled selected>Sélectionnez une option</option>
+              <option data-activate-field="situation-vs-consulat" value="oui">Le tuteur légal est immatriculé au consulat de Montréal</option>
+              <option data-activate-field="non_immatricule" value="non">Le tuteur légal n'est pas immatriculé à Montréal</option>
+            </select>
+          </div>
+
+          <div id="situation-vs-consulat" class="step hidden" >
+            <h2 class="text-xl font-semibold mb-4"><i class="step-number"></i> - Informations supplémentaires sur l'immatriculation</h2>
+            <div id="immatricule_oui" >
+              <p class="mb-2">Veuillez fournir les informations supplémentaires sur votre immatriculation.</p>
+              <div class="mb-4 input-container" style="position: relative;">
+                <label for="num_carte" class="block text-sm font-medium">Numéro de carte consulaire (d'immatriculation)</label>
+                <input type="text" id="num_carte" required name="num_carte" 
+                data-pattern="^CA\d{10}$" data-error-message="CA suivi de 10 chiffres"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" />
+              </div>
+              <div class="mb-4 input-container" style="position: relative;">
+                <label for="date_emission" class="block text-sm font-medium">Date d'émission</label>
+                <input
+                  type="date"
+                  id="date_emission"
+                  name="date_emission" required
+                  class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+                  data-action="setCardValidityState"
+                  data-event="change"
+                />
+              </div>
+              <div class="mb-4 input-container" style="position: relative;">
+                <label for="annee_premiere_immatriculation" class="block text-sm font-medium">Année de première immatriculation</label>
+                <input
+                  type="text"
+                  id="annee_premiere_immatriculation"
+                  name="annee_premiere_immatriculation" required
+                  class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+                  data-pattern="^(19[0-9]{2}|20[0-9]{2})$" data-error-message="Format de l'année invalide"
+                />
+              </div>
+              <div class="mb-4 input-container" id="validite_carte" style="position: relative;">
+                <!-- Message de validité de la carte -->
+                 <i id="message_imm_valide" class="hidden"> Votre carte d'immatriculation consulaire <strong>est en cours de validité</strong></i>
+                 <i id="message_imm_invalide" class="hidden"><strong style="color: red;">Attention:</strong> Votre carte d'immatriculation consulaire <strong>est échue (éxpirée)</strong></i>
+
+                 <input type="hidden" id="validite_carte_consulaire" value="" name="validite_carte_consulaire" />
+              </div>
+            </div>
+          </div>
+
+          <div id="non_immatricule" class="hidden input-container" style="position: relative;">
+            <label> De quel service consulaire dépendez-vous ?</label>
+
+            <select id="resident_montreal" required name="resident_montreal" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+              <option disabled selected>Sélectionnez une option (oui/non)</option>
+              <option data-activate-field="non_immatricule_confirmation" value="Résident région de montreal"> Montréal est bien ma circonscription consulaire </strong></option>
+              <option data-activate-field="non_immatricule_info_hors_montreal" value="Ne dépend pas du consulat">Je dépend d'une autre circonscription consulaire que celle de Montréal</option>
+            </select>
+
+            <div id="non_immatricule_info_hors_montreal" class="hidden">
+              <p><h3>Important.</h3> Nous vous invitons à prendre attache avec le consulat de montréal pour un transfert de votre immatriculation depuis votre circonscription consulaire d'origine. </p>
+              
+            </div>
+          </div>
+          
+            <div id="non_immatricule_confirmation" class="flex items-center justify-center hidden">            
+              <label><input type="checkbox" name="accord-renouvellement-immatriculation" value="Oui" class="mr-2" />En cochant catte case, Je prend connaissance de la nécéssité d'établir ou de renouveler ma carte d'imatriculation préalablement. Pour ce faire, je dois ma rapprocher du consulat à cet effet.</label>
+            </div>
+      
+        </div>
+
+        <!-- Step 5 -->
+        <div data-step data-navigation="full" data-step-name="renseignement-passeport" class="hidden">
+          <h2 class="text-xl font-semibold mb-4"><i class="step-number"></i> - Renseignement sur le passeport</h2>      
+          <div class="mb-4 input-container" style="position: relative;">
+            <label for="premiere_demande" class="block text-sm font-medium">Est-ce un renouvellement ou votre premiere demande de passeport (Algérien) ?</label>
+            <select id="premiere_demande" required name="nature-de-la-demande-de-passeport" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+              <option disabled selected>Sélectionnez une option</option>
+              <option value="Passeport à renouveler" data-activate-field="informations-detaillees-passeport">
+                J'ai déjà un passeport Algérien (éxpiré ou en cours de validité) et je veux le renouveller
+              </option>
+              <option value="Première demande de passeport">Je n'ai pas de passeport Algérien, C'est ma première demande de passeport Algérien</option>
+            </select>
+          </div>
+          <div id="informations-detaillees-passeport" class="hidden">
+            <h2 class="text-xl font-semibold mb-4">Informations supplémentaires sur le passeport</h2>
+            <p class="mb-2">Veuillez fournir les informations sur votre précédent passeport.</p>
+            <div class="mb-4 input-container" style="position: relative;">
+              <label for="num_passeport" class="block text-sm font-medium">Numéro de passeport</label>
+              <input type="text" required data-pattern="^\d{9}$|^\d{7}$|^\d{2}U\d{6}$|^\d{2}u\d{6}$" data-error-message="Format érroné" 
+                id="num_passeport" name="num_passeport" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" placeholder="Saisissez votre numéro de passeport"/>
+            </div>
+            <div class="mb-4 input-container" style="position: relative;">
+              <label for="date_expiration_passeport" class="block text-sm font-medium">Date d'éxpiration</label>
+              <input
+                type="date"
+                id="date_expiration_passeport"
+                name="date_expiration_passeport"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+                data-action="setPassportValidityState"
+                  data-event="change"
+                required
+              />
+            </div>
+
+            <div class="mb-4" id="message_validite_passeport input-container" style="position: relative;">
+              <!-- Message de validité passeport -->
+               <i id="message_pass_valide" class="hidden"> Votre passeport <strong>est en cours de validité</strong></i>
+               <i id="message_pass_invalide" class="hidden"><strong style="color: red;">Attention:</strong> Votre passeport <strong>est échu (éxpiré)</strong></i>
+
+               <input type="hidden" id="validite_passeport" value="" name="validite_passeport" />
+            </div>
+
+            <div class="mb-4 input-container" style="position: relative;">
+              <label for="autorite_emission" class="block text-sm font-medium">Passeport émis par (Autorité émettrice)</label>
+              <select
+              required
+                id="autorite_emission"
+                name="autorite_emission"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+              >
+                <option value="" disabled selected>Sélectionner une autorité d'émission</option>
+                <option value="consulat-montréal">Consulat de Montréal</option>
+                <option value="algérie" data-activate-field="pass-emis-algerie" >Algérie</option>
+                <option value="autre-consulat" data-activate-field="pass-emis-etranger">Autre Mission diplomatique ou consulaire</option>
+ 
+                
+              </select>
+            </div>
+            <div id="pass-emis-algerie" class="hidden input-container" style="position: relative;">
+              <div class="mb-4">
+                <label for="emis_par" class="block text-sm font-medium">Wilaya émettrice</label>
+
+                <select id="emis_par_algerie" name="passeport_emis_par" data-source="wilayas" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" >
+                  <option value="" disabled selected>Sélectionner une wilaya</option>
+                    <!-- liste des wilayas ici -->
+                </select>    
+              </div>
+            </div>
+
+            <div id="pass-emis-etranger" class="hidden">
+              <div class="mb-4 input-container" style="position: relative;">
+                <label for="emis_par" class="block text-sm font-medium">Consulat émetteur</label>
+                <input
+                  type="text"
+                  id="emis_par_etranger"
+                  name="passeport_emis_par"
+                  class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+                  placeholder="Saisir le nom (ville) du consulat émetteur"
+                />
+              </div>
+            </div>           
+          </div>
+          
+        </div>
+
+        <!-- Step 7 -->
+        <div data-step  data-navigation="full" data-step-name="disponibilite-pour-rdv" class="step hidden" data-step-validation="checkSelectedDays">
+          <h2 class="text-xl font-semibold mb-4"><i class="step-number"></i> - Disponibilité pour le rendez-vous</h2>
+          <p class="mb-2">
+            En raison du nombre élevé de demandes et afin de vous fournir un service aussi rapide que possible, nous vous prions de préselectionner 3
+            jours (condition obligatoire) de la semaine pour nous permettre de vous fournir un rendez-vous dans les plus brefs délais. Nous vous
+            remercions de votre collaboration.
+          </p>
+          <div class="mb-4 input-container" style="position: relative;">
+            <label class="block text-sm font-medium">Sélection des jours de disponibilité</label>
+            <div class="mt-1 block">
+              <label><input type="checkbox" name="disponibilite" value="Mardi" class="mr-2" />Mardi</label><br />
+              <label><input type="checkbox" name="disponibilite" value="Mercredi" class="mr-2" />Mercredi</label><br />
+              <label><input type="checkbox" name="disponibilite" value="Jeudi" class="mr-2" />Jeudi</label><br />
+              <label><input type="checkbox" name="disponibilite" value="Vendredi" class="mr-2" />Vendredi</label><br />
+              <label><input type="checkbox" name="disponibilite" value="Samedi" class="mr-2" />Samedi</label><br />
+              <hr />
+              <label aria-disabled="true" class="text-gray-500"
+                ><input disabled type="checkbox" name="disponibilite" value="Dimanche" class="mr-2" />Dimanche (non disponible)</label
+              ><br />
+              <label aria-disabled="true" class="text-gray-500">
+                <input disabled type="checkbox" name="disponibilite" value="Lundi" class="mr-2" />
+                Lundi (non disponible)</label
+              ><br />
+            </div>
+          </div>
+        </div>
+        <!-- Step 8 -->
+        <div data-step data-navigation="submit" data-step-name="synthese" class="hidden">
+          <h2 class="text-xl font-semibold mb-4"><i class="step-number"></i> - Synthèse</h2>
+          <div id="summary" class="mb-4">
+            <!-- Recapitilatif des informations fournies -->
+          </div>
+
+     
+        </div>
+        <!-- Step 9 -->
+        <div data-step data-step-name="message-de-fin" class="no-nav step hidden">
+          <h2 class="text-xl font-semibold mb-4"><i class="step-number"></i>. C'est fini! Restez à l'écoute</h2>
+          <p>Votre demande de rendez-vous a été mise en forme avec succès, celle-ci va s'afficher dans votre application de messagerie par défaut. Veuillez juste confirmer l'envoi depuis votre email.</p>
+          <p>Nous vous contacterons sous peu. Dès qu'un statut est attribué a votre demande, nous vous le ferons savoir. Le cas échéant, vous serez invités a fournir un complément d'information de de document par voie éléctronique. </p>
+          
+          <h3>Merci</h3>
+        </div>
+      </form>
+
+      <div id="additionnal_person_pattern" class="additional-person border border-gray-500 p-2 m-1 rounded-md hidden">
+          <div class="flex justify-end"> <button class="button delete-person -mr-1 -mt-1 border border-gray-300 text-gray-200 bg-red-500 text-xl pl-2 pr-2 rounded-md tooltip" data-tooltip="Supprimer"><span class="-mt-1">X</span></button></div>
+          
+          <h2 class="-mt-5 mb-4"> Personne à ajouter au rendez-vous. <strong id="numero_pattern"></strong> </h2>
+          <label class="block flex justify-end">
+            <input type="checkbox" data-action="personHasSameName" id="meme_nom_pattern" class="ml-3"/>
+            &nbsp;&nbsp; Cette personne porte le même nom de famille que le requérant.              
+          </label>
+
+          <span class="input-container" style="position: relative;">
+            <input type="text" id="additionnal_lastname_pattern" name="Nom personne supplémentaire_pattern" class="lastname m-1 w-64 p-2 border border-gray-700 rounded-md shadow-sm placeholder-color-gray-700" placeholder="Nom"  data-pattern="^[A-Z][a-zA-Z' -]{2,49}$" data-error-message="3 à 50 lettres" required/>
+          </span>
+          <span class="input-container" style="position: relative;">
+            <input type="text" id="additionnal_firstname_pattern" name="Prénom personne supplémentaire_pattern" class="firstname m-1 w-48 p-2 border border-gray-700 rounded-md shadow-sm" placeholder="Prénom"  data-pattern="^[A-Z][a-zA-Z' -]{2,49}$" data-error-message="3 à 50 lettres" required/>
+          </span>
+          <span class="input-container" style="position: relative;">
+            <input type="date" id="additionnal_age_pattern" name="Date-Naissance personne supplémentaire_pattern"  class="age m-1 w-36 p-2 border border-gray-700 rounded-md shadow-sm" placeholder="Date de naissance" required/>
+          </span>
+
+      </div>
+
+      <div nav-buttons-pattern class="navigation-buttons hidden pt-5 mt-5">
+        <div class="w-12 h-12 rounded-button bg-blue-500 hover:bg-blue-600 text-white p-0 flex items-center justify-right nav-button previous-button">
+          <label class="tooltip" data-tooltip="Précédent" style="margin: 0; padding: 0">
+            <i class="fa fa-arrow-circle-left" style="font-size: 36px; position: relative"></i>
+            <button type="button" data-nav-btn></button>
+          </label>
+        </div>
+
+        <div class="w-12 h-12 bg-blue-500 hover:bg-blue-600 text-white p-0 flex items-center justify-right nav-button next-button">
+          <label class="tooltip" data-tooltip="Suivant" style="margin: 0; padding: 0">
+            <i class="fa fa-arrow-circle-right" style="font-size: 36px; position: relative"></i>
+            <button type="button" data-nav-btn></button>
+          </label>
+        </div>
+
+          
+        <div class="w-32 h-12 bg-green-500 hover:bg-green-700 text-white p-0 flex items-center justify-right submit-button large" style="float: right;">
+          <label
+            class="tooltip"
+            data-tooltip="Envoyer le formulaire"
+            class="flex items-center"
+            style="margin: 0; padding: 0; display: inline-block; width: 100%"
+          >
+            <button type="button" id="submit" data-nav-btn class="bg-green-500 text-white p-2 rounded-md">
+              <i class="fa fa-paper-plane" style="font-size: 24px; position: relative"></i> Envoyer
+            </button>
+          </label>
+        </div>
+
+      </div>
+
+    </div>
+    <script src="./javascript/app/typescript/wizardVM.js"></script>
+    <script src="./javascript/app/typescript/App.js"></script>
+  </body>
+</html>

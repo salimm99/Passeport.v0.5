@@ -1,0 +1,21 @@
+{
+  "name": "ts-passport-v1",
+  "version": "1.0.0",
+  "main": "App.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "tsc --watch",
+    "build": "rollup -c"
+  },
+  "keywords": [],
+  "author": "Salim-Mouhoubi-2025 - Tel: +438-322-7833. salim_m@hotmail.fr",
+  "license": "Prop",
+  "description": "Appointment subscription system",
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
+    "@types/jquery": "^3.5.32",
+    "rollup": "^4.29.1",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "typescript": "^5.7.2"
+  }
+}
