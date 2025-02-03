@@ -36,6 +36,7 @@
   margin-right: auto;
   height: 80px;
   position: relative;
+  border: solid 1px orange;
 }
 
 .next-button,
