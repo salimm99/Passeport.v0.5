@@ -204,13 +204,7 @@ class WizardViewModel {
       let pattern = new RegExp(input.attr("data-pattern") as string);
       let errorMessageId = input.attr("id") + "-error";
 
-      input.after(
-        '<i id="' +
-          errorMessageId +
-          '" class="hidden text-xs font-bold" style="color : red; position: absolute; top: 0; right:0 ">' +
-          input.data("error-message") +
-          "</i>"
-      );
+      input.after('<i id="' + errorMessageId + '" class="hidden text-xs font-bold error-msg">' + input.data("error-message") + "</i>");
 
       input.on("blur change", (event: JQuery.TriggeredEvent) => {
         let value = $(event.target).val() as string;

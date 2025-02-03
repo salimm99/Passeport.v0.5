@@ -121,3 +121,11 @@ span .error-field-info {
 .alert-icon:hover::after {
   opacity: 1;
 }
+
+.error-msg {
+  color: red;
+  background-color: white;
+  position: absolute;
+  top: -1em;
+  right: 0;
+}
