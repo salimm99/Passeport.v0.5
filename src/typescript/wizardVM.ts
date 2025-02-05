@@ -71,10 +71,12 @@ class WizardViewModel {
     this.WizardComponent = wizardComponent;
 
     let steps = this.GetViewComponents("data-step");
+    $(steps[0]).attr("data-navigation", "next");
     const stepNavigator = new StepNavigation(steps);
 
-    $("*[data-step]  i.step-number").map((index, item) => {
-      $(item).text(index + 1);
+    steps.map((step, index) => {
+      let numberContainer = $(step).find("i.step-number");
+      $(numberContainer).text(index + 1);
     });
 
     const navButtons = $("button[data-nav-btn]");
@@ -194,6 +196,18 @@ class WizardViewModel {
       window.location.href = mailto;
 
       setTimeout(() => {}, 2000);
+    });
+
+    $(".fold-icon").on("click", (e: JQuery.ClickEvent) => {
+      let foldIcon = e.target;
+      let parent = $(foldIcon).parents(".accordion").first();
+      let isUnfold = $(parent).hasClass("unfold");
+
+      if (isUnfold) {
+        $(parent).removeClass("unfold");
+      } else {
+        $(parent).addClass("unfold");
+      }
     });
   }
 
@@ -451,6 +465,10 @@ class WizardViewModel {
   public GetViewComponents(selecter: string): string[] {
     let steps = $(this.WizardComponent)
       .find(`[${selecter}]`) //"data-step"
+      .filter((index, stepItem) => {
+        let skipped = $(stepItem).attr("data-skipped");
+        return skipped == null || skipped.trim().toLowerCase() != "true";
+      })
       .map((index, selectedElement) => {
         $(selectedElement).attr(`${selecter}`, index);
         return `[${selecter}="${$(selectedElement).attr(`${selecter}`)}"]`;

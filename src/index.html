@@ -14,10 +14,45 @@
       <h2 class="text-2xl font-bold mb-8">Demande de Rendez-vous Passeport</h2>
       <form id="appointmentForm">
 
- 
+        <div data-step data-navigation="next" data-skipped="false" data-step-name="bienvenue">
+          <h2 class="text-xl font-semibold mb-4"><i class="step-number"></i> - Bienvenue dans notre procédure personnalisée de prise de rendez-vous </h2>
+       
+          <p class="p-2">
+            &nbsp;&nbsp;&nbsp; Cette procédure vise à <strong> vous aider soumettre votre demande de rendez-vous </strong>, de suivre votre demande de manière personnalisée, et de vous <strong> accompagner </strong> tout au long de ce processus pour un <strong> traitement rapide et efficace </strong>.  
+          </p>
+          <br/>
+          <p class="p-2">
+            &nbsp;&nbsp;&nbsp; En raison du grand nombre de demandes de rendez-vous, nous essaierons de prioriser chaque cas en tenant compte des conditions de chaque demandeur. Cette approche, <strong> en complément des moyens actuels </strong>, vise à fluidifier notre travail afin de délivrer un service optimal en termes d'efficacité et d'équité, tout en prenant en compte les préoccupations de chacun.
+          </p>
+        </div>
+
+        <div data-step data-navigation="full"  data-skipped="false" data-step-name="presentation" class="step hidden">
+          <h2 class="text-xl font-semibold mb-4"><i class="step-number"></i> - Guide complet de la procédure </h2>
+          <ul  class="p-5 spaced-list">
+            <li class="accordion"><i class="fold-icon fa fa-chevron-circle-right"></i> Cette procédure comprend 10 étapes importantes [+] 
+              <ul class="sub-menu pl-5 ">
+                  <li>Identité le requérant</li>
+                  <li>Membres de la famille concernés pas ce rendez-vous</li>
+                  <li>Coordonées complètes du requérant</li>
+                  <li>Lieu de naissance du requérant</li>
+                  <li>Lieu de naissance et situation familiale du requérant</li>
+                  <li>Statut du requérant au Canada</li>
+                  <li>Statut du requérant au Canada et situation professionnelle</li>
+                  <li>Immatriculation du requérant au Consulat de montréal</li>
+                  <li>Passeport actuel du requérant</li>
+                  <li>Disponnibilités pour un rendez-vous</li>
+              </ul>
+            </li>
+            <li> Vous pouvez prendre rendez-vous pour toute votre famille en une seule étape et, si possible, pour la même date.</li>	
+            <li> Vous pouvez revenir en arrère et vérifier ou modifier une information avant l'envoi définitif [+]. </li>  
+            <li> Cette procédure nous permet de mettre en place une procédure décentralisée de suivi de votre demande [+]. </li> 
+            <li> Lors du procéssus de traitement, si des documents ou informations complémentaires sont nécessaires, vous serez invités a les fournir en vous fournissant le moyen de les délivrer de facon sécure.</li>
+            <li> Il vous sera toujours possible d'ajouter/compléter des informations ou documents optionnels à toutes les étapes (même après la soumission)</li>           
+          </ul>
+        </div>
 
         <!-- Step renseignement-personne -->
-        <div data-step data-navigation="next" data-step-name="renseignement-personne">
+        <div data-step data-navigation="full" data-step-name="renseignement-personne" class="step hidden">
           <h2 class="text-xl font-semibold mb-4"><i class="step-number"></i> - Qui est le requérant</h2>
           <p class="mb-2">Veuillez remplir les informations personnelles du requérant.</p>
           <div class="mb-4 input-container" style="position: relative;">

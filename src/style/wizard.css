@@ -141,3 +141,53 @@ span .error-field-info {
   top: -1em;
   right: 0;
 }
+
+.spaced-list {
+  list-style: none;
+}
+
+.spaced-list li {
+  padding: 1px 5px;
+  margin-top: 5px;
+  /* border: solid 2px rgba(8, 182, 2, 0.968);
+  border-radius: 8px;
+  background-color: rgba(8, 182, 2, 0.2);*/
+}
+.sub-menu {
+  margin-top: 5px;
+  display: none;
+}
+.sub-menu li {
+  background-color: rgba(8, 182, 2, 0.1);
+  border: solid 1px rgba(8, 182, 2, 0.4);
+  border-radius: 15px;
+  margin-top: 1px;
+  margin-right: 15px;
+}
+
+.spaced-list li::first-letter {
+  font-size: 1.1em;
+  font-weight: bold;
+  font-style: italic;
+  margin-left: 5px;
+}
+
+.spaced-list li.unfold .sub-menu {
+  display: block !important;
+}
+
+.fold-icon {
+  font-size: 40px !important;
+  color: blueviolet;
+  border: 0;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 0;
+  display: inline-block;
+  transform: translateZ(0);
+}
+
+.unfold > .fold-icon {
+  transform: rotate(90deg);
+  transition: transform 0.9s ease-in-out;
+}
