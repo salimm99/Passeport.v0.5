@@ -149,6 +149,8 @@ span .error-field-info {
 .spaced-list li {
   padding: 1px 5px;
   margin-top: 5px;
+  border-bottom: #007bff;
+
   /* border: solid 2px rgba(8, 182, 2, 0.968);
   border-radius: 8px;
   background-color: rgba(8, 182, 2, 0.2);*/
@@ -157,11 +159,15 @@ span .error-field-info {
   margin-top: 5px;
   display: none;
 }
+
+.sub-menu ul {
+  list-style: square !important;
+}
 .sub-menu li {
   background-color: rgba(8, 182, 2, 0.1);
   border: solid 1px rgba(8, 182, 2, 0.4);
   border-radius: 15px;
-  margin-top: 1px;
+  margin-top: 0;
   margin-right: 15px;
 }
 

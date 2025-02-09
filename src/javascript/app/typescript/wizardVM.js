@@ -102,8 +102,9 @@ class WizardViewModel {
             $(requiredInput).after(`<span class="error-field-info "><i class="error-field-icon fa fa-times"></i></span>`);
         });
         this.AttachDynamicActions();
+        let allActivateFieldOptions = $("select option[data-activate-field]");
         // Reactive options
-        $("select option[data-activate-field]").map((index, optionHtmlItem) => {
+        $(allActivateFieldOptions).map((index, optionHtmlItem) => {
             let activateTargets = [];
             let dataAcivatedFieldString = $(optionHtmlItem).attr("data-activate-field");
             if (dataAcivatedFieldString != null) {
@@ -115,32 +116,11 @@ class WizardViewModel {
                     return field != null && field.trim().length > 0;
                 });
             }
-            let parentSelect = $(optionHtmlItem).parent();
-            parentSelect.on("change", (event) => {
-                let source = event.target;
-                let selectedValue = $(source).val();
-                let optionValue = $(optionHtmlItem).val();
-                if (activateTargets != null) {
-                    activateTargets.map((targetToActivate) => {
-                        $(`#${targetToActivate}`).hide();
-                        let innerInputs = `#${targetToActivate} input, #${targetToActivate} select`;
-                        $(innerInputs).off("change blur");
-                    });
-                    if (selectedValue === optionValue) {
-                        activateTargets.map((targetToActivate) => {
-                            setTimeout(() => {
-                                $(`#${targetToActivate}`).show();
-                                let innerInputs = `#${targetToActivate} input, #${targetToActivate} select`;
-                                this.AttachValidationListeners(innerInputs);
-                            }, 30);
-                        });
-                    }
-                }
-                //
-            });
+            let parentSelect = $(optionHtmlItem).parents("select").first();
+            this.AttachChangeOnActivatedSelect(parentSelect, optionHtmlItem, activateTargets);
         });
-        const summaryGenerator = new SummaryGenerator();
-        const formManager = new FormManager(summaryGenerator);
+        let summaryGenerator = new SummaryGenerator();
+        let formManager = new FormManager(summaryGenerator);
         formManager.handleFormSubmission("#appointmentForm", "#summary");
         // Validation
         let inputsDefinition = "input[type='text'][data-pattern], textarea[data-pattern], input[type='email'], input[type='date'], select[required], input[type='checkbox'] ";
@@ -179,6 +159,38 @@ class WizardViewModel {
             }
         });
     }
+    AttachChangeOnActivatedSelect(parentSelect, optionHtmlItem, activateTargets) {
+        $(parentSelect).on("change", (event) => {
+            let source = event.target;
+            let sourceId = $(source).attr("id");
+            let selectedValue = $(source).val();
+            let optionValue = $(optionHtmlItem).val();
+            if (activateTargets != null) {
+                activateTargets.map((targetToActivate) => {
+                    $(`#${targetToActivate}`).hide();
+                    let innerInputs = `#${targetToActivate} input, #${targetToActivate} select`;
+                    // $(innerInputs).off("change blur");
+                });
+                if (selectedValue === optionValue) {
+                    activateTargets.map((targetToActivate) => {
+                        setTimeout(() => {
+                            $(`#${targetToActivate}`).show();
+                            let innerInputs = `#${targetToActivate} input, #${targetToActivate} select`;
+                            $(innerInputs).map((index, innerInput) => {
+                                var events = $._data($(innerInput)[0], "events");
+                                let hasChange = events && events.change;
+                                let hasBlur = events && events.blur;
+                                if (!hasBlur || !hasChange) {
+                                    this.AttachValidationListeners(innerInputs);
+                                }
+                            });
+                            // this.AttachChangeOnActivatedSelect(parentSelect, optionHtmlItem, activateTargets);
+                        }, 30);
+                    });
+                }
+            }
+        });
+    }
     // Configure generic validation
     AttachValidationListeners(inputsDefinition) {
         $(inputsDefinition).map((index, inputElement) => {
@@ -192,7 +204,7 @@ class WizardViewModel {
                 const requiredAlertIcon = inputContainer.find(".required-alert");
                 const validFieldIcon = inputContainer.find(".valid-field-info");
                 const errorFieldIcon = inputContainer.find(".error-field-info");
-                if (value.trim() != "") {
+                if (value != null && value.trim() != "") {
                     requiredAlertIcon.hide();
                 }
                 else {
@@ -390,6 +402,7 @@ class WizardViewModel {
         $("#personnes_supplémentaires").append(clonedElement);
         this.AttachValidationListeners(`#${$(clonedElement).attr("id")} input, #${$(clonedElement).attr("id")} select`);
         $("#nombre_personnes").val(`${this.additionnalPersons}`);
+        let parentStep = $("#nombre_personnes").parents("[data-step]");
         $(clonedElement)
             .find(".delete-person")
             .on("click", (event) => {
@@ -397,9 +410,9 @@ class WizardViewModel {
             $(clonedElement).remove();
             this.additionnalPersons--;
             $("#nombre_personnes").val(`${this.additionnalPersons}`);
+            StepNavigation.validateStep(parentStep);
         });
         this.AttachDynamicActions(clonedElement);
-        let parentStep = $("#nombre_personnes").parents("[data-step]");
         StepNavigation.validateStep(parentStep);
     }
     showFinalSummary() {

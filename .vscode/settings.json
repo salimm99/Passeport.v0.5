@@ -1,0 +1,7 @@
+{
+  "files.autoSave": "onWindowChange",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  }
+}

@@ -115,8 +115,9 @@ class WizardViewModel {
 
     this.AttachDynamicActions();
 
+    let allActivateFieldOptions = $("select option[data-activate-field]");
     // Reactive options
-    $("select option[data-activate-field]").map((index, optionHtmlItem) => {
+    $(allActivateFieldOptions).map((index, optionHtmlItem) => {
       let activateTargets: string[] = [];
 
       let dataAcivatedFieldString = $(optionHtmlItem).attr("data-activate-field") as string;
@@ -130,39 +131,12 @@ class WizardViewModel {
           });
       }
 
-      let parentSelect = $(optionHtmlItem).parent();
-
-      parentSelect.on("change", (event: JQuery.ChangeEvent) => {
-        let source = event.target;
-        let selectedValue = $(source).val();
-
-        let optionValue = $(optionHtmlItem).val();
-
-        if (activateTargets != null) {
-          activateTargets.map((targetToActivate) => {
-            $(`#${targetToActivate}`).hide();
-
-            let innerInputs = `#${targetToActivate} input, #${targetToActivate} select`;
-            $(innerInputs).off("change blur");
-          });
-
-          if (selectedValue === optionValue) {
-            activateTargets.map((targetToActivate) => {
-              setTimeout(() => {
-                $(`#${targetToActivate}`).show();
-
-                let innerInputs = `#${targetToActivate} input, #${targetToActivate} select`;
-                this.AttachValidationListeners(innerInputs);
-              }, 30);
-            });
-          }
-        }
-        //
-      });
+      let parentSelect = $(optionHtmlItem).parents("select").first();
+      this.AttachChangeOnActivatedSelect(parentSelect, optionHtmlItem, activateTargets);
     });
 
-    const summaryGenerator = new SummaryGenerator();
-    const formManager = new FormManager(summaryGenerator);
+    let summaryGenerator = new SummaryGenerator();
+    let formManager = new FormManager(summaryGenerator);
     formManager.handleFormSubmission("#appointmentForm", "#summary");
 
     // Validation
@@ -211,6 +185,47 @@ class WizardViewModel {
     });
   }
 
+  private AttachChangeOnActivatedSelect(parentSelect: JQuery<HTMLSelectElement>, optionHtmlItem: HTMLElement, activateTargets: string[]) {
+    $(parentSelect).on("change", (event: JQuery.ChangeEvent) => {
+      let source = event.target;
+      let sourceId = $(source).attr("id");
+      let selectedValue = $(source).val();
+
+      let optionValue = $(optionHtmlItem).val();
+
+      if (activateTargets != null) {
+        activateTargets.map((targetToActivate) => {
+          $(`#${targetToActivate}`).hide();
+
+          let innerInputs = `#${targetToActivate} input, #${targetToActivate} select`;
+          // $(innerInputs).off("change blur");
+        });
+
+        if (selectedValue === optionValue) {
+          activateTargets.map((targetToActivate) => {
+            setTimeout(() => {
+              $(`#${targetToActivate}`).show();
+
+              let innerInputs = `#${targetToActivate} input, #${targetToActivate} select`;
+              $(innerInputs).map((index, innerInput) => {
+                var events = ($ as any)._data($(innerInput)[0], "events");
+
+                let hasChange = events && events.change;
+                let hasBlur = events && events.blur;
+
+                if (!hasBlur || !hasChange) {
+                  this.AttachValidationListeners(innerInputs);
+                }
+              });
+
+              // this.AttachChangeOnActivatedSelect(parentSelect, optionHtmlItem, activateTargets);
+            }, 30);
+          });
+        }
+      }
+    });
+  }
+
   // Configure generic validation
   public AttachValidationListeners(inputsDefinition: string) {
     $(inputsDefinition).map((index, inputElement) => {
@@ -228,7 +243,7 @@ class WizardViewModel {
         const validFieldIcon = inputContainer.find(".valid-field-info");
         const errorFieldIcon = inputContainer.find(".error-field-info");
 
-        if (value.trim() != "") {
+        if (value != null && value.trim() != "") {
           requiredAlertIcon.hide();
         } else {
           requiredAlertIcon.show();
@@ -440,6 +455,8 @@ class WizardViewModel {
 
     $("#nombre_personnes").val(`${this.additionnalPersons}`);
 
+    let parentStep = $("#nombre_personnes").parents("[data-step]");
+
     $(clonedElement)
       .find(".delete-person")
       .on("click", (event: JQuery.ClickEvent) => {
@@ -447,11 +464,11 @@ class WizardViewModel {
         $(clonedElement).remove();
         this.additionnalPersons--;
         $("#nombre_personnes").val(`${this.additionnalPersons}`);
+        StepNavigation.validateStep(parentStep);
       });
 
     this.AttachDynamicActions(clonedElement as any);
 
-    let parentStep = $("#nombre_personnes").parents("[data-step]");
     StepNavigation.validateStep(parentStep);
   }
 
