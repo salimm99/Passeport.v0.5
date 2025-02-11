@@ -154,7 +154,6 @@
       
         </div>
 
-
         <!-- Step -->
         <div data-step data-navigation="full" data-skipped="false"  data-step-name="coordonnees" class="step hidden">
           <h2 class="text-xl font-semibold mb-4"><i class="step-number"></i> - Coordonnées </h2>
@@ -309,9 +308,6 @@
 
         </div>
 
-
-
-
         <!-- Step statut-au-canada -->
         <div data-step data-navigation="full" data-skipped="false"  data-step-name="statut-au-canada" class="step hidden">
           <h2 class="text-xl font-semibold mb-4"><i class="step-number"></i> - Statut au Canada</h2>
@@ -419,7 +415,7 @@
         </div>
         
         <!-- Step 4 -->
-        <div data-step data-navigation="full" data-step-name="situation-vs-consulat" class="step hidden">
+        <div data-step data-navigation="full" data-step-name="situation-vs-consulat" class="step hidden" data-step-validation="checkImatriculationSituation" >
           <h2 class="text-xl font-semibold mb-4">6 - immatriculation (au consulat)</h2>
           <p class="mb-2">Veuillez répondre aux questions concernant votre immatriculation au consulat d'Algérie à Montréal</p>
           
@@ -432,19 +428,15 @@
             </select>
           </div>
 
-  
-       
-     
           <div class="mb-4 hidden  input-container" id="immatriculation-tuteur" style="position: relative;">
             <p> Nous basant sur la <strong>date de naissance</strong> que vous avez fourni, nous avons déterminé <strong>que le (la) requérant(e) agé(e) de moins de 19 ans</strong>. Vous devez fournir les informations suivantes sur <strong>l'immatriculation du tuteur légal</strong> (père ou mère)</p>
             <label for="tuteur-immatricule" class="block text-sm font-medium">Le tuteur légal est-il (elle) immatriculé(e) au consulat de Montréal ?</label>
             <select id="tuteur-immatricule" name="tuteur-immatricule" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
               <option disabled selected>Sélectionnez une option</option>
               <option data-activate-field="situation-vs-consulat" value="oui">Le tuteur légal est immatriculé au consulat de Montréal</option>
-              <option data-activate-field="aucune-immatriculation___" value="non">Le tuteur légal n'est pas immatriculé à Montréal</option>
+              <option data-activate-field="aucune-immatriculation" value="non">Le tuteur légal n'est pas immatriculé à Montréal</option>
             </select>
           </div>
-
 
           <div id="situation-vs-consulat" class="hidden" >
             <h2 class="text-xl font-semibold mb-4"><i class="step-number"></i> - Informations supplémentaires sur l'immatriculation</h2>
@@ -502,7 +494,7 @@
             </div>
 
             <div id="non_immatricule_confirmation" class="flex items-center justify-center hidden input-container" style="position: relative;">            
-              <label><input type="checkbox" name="accord-renouvellement-immatriculation" value="Oui" required class="mr-2" />En cochant catte case, Je prend connaissance de la nécéssité d'établir ou de renouveler ma carte d'imatriculation préalablement. Pour ce faire, je dois ma rapprocher du consulat à cet effet.</label>
+              <label><input type="checkbox" name="accord-renouvellement-immatriculation" value="Oui" required class="mr-2" />En cochant catte case, Je prend connaissance de la nécéssité d'établir ou de renouveler ma carte d'imatriculation préalablement. Pour ce faire, je dois me rapprocher du consulat à cet effet.</label>
             </div>
           </div>  
  
@@ -594,7 +586,7 @@
         </div>
 
         <!-- Step 7 -->
-        <div data-step  data-navigation="full" data-step-name="disponibilite-pour-rdv" class="step hidden" data-step-validation="checkSelectedDays">
+        <div data-step  data-navigation="full" data-step-name="disponibilite-pour-rdv" class="step hidden" data-step-validation="checkSelectedDays" data-validate-args="3">
           <h2 class="text-xl font-semibold mb-4"><i class="step-number"></i> - Disponibilité pour le rendez-vous</h2>
           <p class="mb-2">
             En raison du nombre élevé de demandes et afin de vous fournir un service aussi rapide que possible, nous vous prions de préselectionner 3
@@ -638,6 +630,10 @@
           <h3>Merci</h3>
         </div>
       </form>
+
+      <div id="end-process" class="hidden" >
+        <h1 class="message"> Vous ne pouvez pas continuer à prendre rendez-vous.</h1>
+      </div>
 
       <div id="additionnal_person_pattern" class="additional-person border border-gray-500 p-2 m-1 rounded-md hidden">
           <div class="flex justify-end"> <button class="button delete-person -mr-1 -mt-1 border border-gray-300 text-gray-200 bg-red-500 text-xl pl-2 pr-2 rounded-md tooltip" data-tooltip="Supprimer"><span class="-mt-1">X</span></button></div>

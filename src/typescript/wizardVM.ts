@@ -197,7 +197,7 @@ class WizardViewModel {
         activateTargets.map((targetToActivate) => {
           $(`#${targetToActivate}`).hide();
 
-          let innerInputs = `#${targetToActivate} input, #${targetToActivate} select`;
+          //let innerInputs = `#${targetToActivate} input, #${targetToActivate} select`;
           // $(innerInputs).off("change blur");
         });
 
@@ -218,7 +218,8 @@ class WizardViewModel {
                 }
               });
 
-              // this.AttachChangeOnActivatedSelect(parentSelect, optionHtmlItem, activateTargets);
+              let parentStep = $(parentSelect).parents("[data-step]");
+              StepNavigation.validateStep(parentStep);
             }, 30);
           });
         }
@@ -587,9 +588,11 @@ class StepNavigation implements IStepNavigator {
   public static validateStep(step: JQuery<HTMLElement>) {
     if (step) {
       let actionName = $(step).attr("data-step-validation");
+      let args = $(step).attr("data-validate-args") as string;
       let stepIsValid = true;
       if (actionName != null && actionName.trim().length > 0) {
-        stepIsValid = (this as any)[actionName](3);
+        let param = args != null ? parseInt(args) : 0;
+        stepIsValid = (this as any)[actionName](param);
       }
 
       let allInputs = $(step).find("input, select");
@@ -664,6 +667,23 @@ class StepNavigation implements IStepNavigator {
     });
 
     return selectedDays.length >= minNumberOfDays;
+  }
+
+  public static checkImatriculationSituation(): boolean {
+    let firstDiv = $("#non_immatricule_info_hors_montreal");
+    let secondDiv = $("#non_immatricule_confirmation");
+
+    let nonImmatriculeHorsMontreal = firstDiv.is(":visible");
+    let nonImmatriculeDeMontreal = secondDiv.is(":visible");
+    if (nonImmatriculeHorsMontreal || nonImmatriculeDeMontreal) {
+      $("#end-process").show();
+      $(firstDiv).parents("[data-step]").first().find(".navigation-buttons").hide();
+      return false;
+    } else {
+      $("#end-process").hide();
+      $(firstDiv).parents("[data-step]").first().find(".navigation-buttons").show();
+    }
+    return true;
   }
 }
 

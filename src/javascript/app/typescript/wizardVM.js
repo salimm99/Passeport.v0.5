@@ -168,7 +168,7 @@ class WizardViewModel {
             if (activateTargets != null) {
                 activateTargets.map((targetToActivate) => {
                     $(`#${targetToActivate}`).hide();
-                    let innerInputs = `#${targetToActivate} input, #${targetToActivate} select`;
+                    //let innerInputs = `#${targetToActivate} input, #${targetToActivate} select`;
                     // $(innerInputs).off("change blur");
                 });
                 if (selectedValue === optionValue) {
@@ -184,7 +184,8 @@ class WizardViewModel {
                                     this.AttachValidationListeners(innerInputs);
                                 }
                             });
-                            // this.AttachChangeOnActivatedSelect(parentSelect, optionHtmlItem, activateTargets);
+                            let parentStep = $(parentSelect).parents("[data-step]");
+                            StepNavigation.validateStep(parentStep);
                         }, 30);
                     });
                 }
@@ -506,9 +507,11 @@ class StepNavigation {
     static validateStep(step) {
         if (step) {
             let actionName = $(step).attr("data-step-validation");
+            let args = $(step).attr("data-validate-args");
             let stepIsValid = true;
             if (actionName != null && actionName.trim().length > 0) {
-                stepIsValid = this[actionName](3);
+                let param = args != null ? parseInt(args) : 0;
+                stepIsValid = this[actionName](param);
             }
             let allInputs = $(step).find("input, select");
             let visibleStepInputs = allInputs.filter((index, input) => {
@@ -574,6 +577,22 @@ class StepNavigation {
             selectedDays.push($(this).val());
         });
         return selectedDays.length >= minNumberOfDays;
+    }
+    static checkImatriculationSituation() {
+        let firstDiv = $("#non_immatricule_info_hors_montreal");
+        let secondDiv = $("#non_immatricule_confirmation");
+        let nonImmatriculeHorsMontreal = firstDiv.is(":visible");
+        let nonImmatriculeDeMontreal = secondDiv.is(":visible");
+        if (nonImmatriculeHorsMontreal || nonImmatriculeDeMontreal) {
+            $("#end-process").show();
+            $(firstDiv).parents("[data-step]").first().find(".navigation-buttons").hide();
+            return false;
+        }
+        else {
+            $("#end-process").hide();
+            $(firstDiv).parents("[data-step]").first().find(".navigation-buttons").show();
+        }
+        return true;
     }
 }
 class ButtonHandlerBase {
