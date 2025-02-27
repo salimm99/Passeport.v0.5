@@ -133,12 +133,12 @@ class WizardViewModel {
         stepNavigator.showStep(0);
         // Submit button handling
         $("#submit").on("click", () => {
-            var _a;
             let formElement = $("#appointmentForm");
-            let numCardField = formElement.find('[name="num_carte_consulaire"]');
-            if (((_a = numCardField.val()) === null || _a === void 0 ? void 0 : _a.toString().trim().toUpperCase().startsWith("CA")) == false) {
-                numCardField.val(`CA${numCardField.val()}`);
+            /*  let numCardField = formElement.find('[name="num_carte_consulaire"]');
+            if (numCardField.val()?.toString().trim().toUpperCase().startsWith("CA") == false) {
+              numCardField.val(`CA${numCardField.val()}`);
             }
+      */
             let formData = $("#appointmentForm")
                 .find(".included")
                 .serializeArray()
@@ -512,12 +512,12 @@ class CountryManager {
 }
 class SummaryGenerator {
     static generateSummary() {
-        var _a;
         let formElement = $("#appointmentForm");
-        let numCardField = formElement.find('[name="num_carte_consulaire"]');
-        if (((_a = numCardField.val()) === null || _a === void 0 ? void 0 : _a.toString().trim().toUpperCase().startsWith("CA")) == false) {
-            numCardField.val(`CA${numCardField.val()}`);
+        /*  let numCardField = formElement.find('[name="num_carte_consulaire"]');
+        if (numCardField.val()?.toString().trim().toUpperCase().startsWith("CA") == false) {
+          numCardField.val(`CA${numCardField.val()}`);
         }
+    */
         let formData = $("#appointmentForm")
             .find(".included")
             .serializeArray()
