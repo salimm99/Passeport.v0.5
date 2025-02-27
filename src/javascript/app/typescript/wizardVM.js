@@ -70,6 +70,10 @@ class WizardViewModel {
         $(steps[0]).attr("data-navigation", "next");
         const stepNavigator = new StepNavigation(steps);
         steps.map((step, index) => {
+            // add hidden field   let stepName = $(this.steps[stepIndex]).attr("data-step-name")
+            let stepName = $(step).attr("data-step-name");
+            let hiddenFieldToInject = `<input type="hidden" name="Etape-${index + 1}" value="===== [${stepName}] =====" />`;
+            $(step).prepend(hiddenFieldToInject);
             let numberContainer = $(step).find("i.step-number");
             $(numberContainer).text(index + 1);
         });
@@ -129,7 +133,14 @@ class WizardViewModel {
         stepNavigator.showStep(0);
         // Submit button handling
         $("#submit").on("click", () => {
-            let formData = $("#appointmentForm")
+            var _a;
+            let formElement = $("#appointmentForm");
+            let numCardField = formElement.find('name="num_carte_consulaire"');
+            if (((_a = numCardField.val()) === null || _a === void 0 ? void 0 : _a.toString().trim().toUpperCase().startsWith("CA")) == false) {
+                numCardField.val(`CA${numCardField.val()}`);
+            }
+            let formData = formElement
+                .find(".included")
                 .serializeArray()
                 .filter((item) => {
                 return item.value.trim().length > 0 && item.name.trim().toLowerCase() != "disponibilite";
@@ -139,13 +150,21 @@ class WizardViewModel {
                 selectedDays.push($(this).val());
             });
             formData.push({ name: "disponibilite", value: selectedDays.join(", ") });
-            let mailto = "mailto:rendezvous.passeport@consulatdz.ca?subject=Demande%20de%20Rendez-vous%20Passeport&body=";
+            formData.unshift({ name: "null", value: " " });
+            formData.unshift({ name: "null", value: " " });
+            formData.unshift({ name: "null", value: " " });
+            formData.unshift({ name: "null", value: "___________________________________________________________________________________" });
+            formData.unshift({ name: "null", value: "|ATTENTION : Contenu généré automatiquement. Ne pas modifier ce courriel.|" });
+            formData.unshift({ name: "null", value: " " });
+            formData.unshift({ name: "null", value: "___________________________________________________________________________________" });
+            let mailto = "mailto:rendezvous.passeport@consulatdz.ca?subject=Demande%20de%20Rendez-vous%20Passeport%20[NE%20PAS%20MODIFIER%20LE%20CONTENU]&body=";
             formData.forEach(function (field) {
-                mailto += encodeURIComponent(field.name) + ": " + encodeURIComponent(field.value) + "%0D%0A";
+                mailto += encodeURIComponent(field.name != "null" ? field.name : "#") + ": " + encodeURIComponent(field.value) + "%0D%0A";
             });
             // Open the mailto link
-            window.location.href = mailto;
-            setTimeout(() => { }, 2000);
+            let mailtoLink = document.createElement("a");
+            mailtoLink.href = mailto;
+            mailtoLink.click();
         });
         $(".fold-icon").on("click", (e) => {
             let foldIcon = e.target;
@@ -156,6 +175,15 @@ class WizardViewModel {
             }
             else {
                 $(parent).addClass("unfold");
+            }
+        });
+        // Limiter les champs de type "date"
+        let today = new Date().toISOString().split("T")[0];
+        $('input[type="date"]')
+            .attr("max", today)
+            .on("change", (event) => {
+            if (event.target.value > today) {
+                event.target.value = today;
             }
         });
     }
@@ -350,6 +378,10 @@ class WizardViewModel {
         let postalCode = $(source).val();
         if (postalCode != null && postalCode.trim().length > 0) {
             postalCode = postalCode.toUpperCase().trim();
+            if (postalCode.indexOf(" ") < 0 && postalCode.indexOf("-") < 0) {
+                postalCode = postalCode.slice(0, 3) + "-" + postalCode.slice(3);
+                $(source).val(postalCode);
+            }
             let province = "";
             if (postalCode.startsWith("H") || postalCode.startsWith("G") || postalCode.startsWith("J"))
                 province = "Québec";
@@ -364,6 +396,19 @@ class WizardViewModel {
             let selectProvince = $("#province_residence");
             $(selectProvince).val(province);
             $(selectProvince).trigger("change");
+        }
+    }
+    formatCamelCase(source) {
+        let valueString = $(source).val();
+        let capitalised = valueString[0].toUpperCase() + valueString.slice(1).toLowerCase();
+        $(source).val(capitalised);
+    }
+    formatPhoneNumber(source) {
+        let valueString = $(source).val().trim().split("(").join("").split(")").join("");
+        valueString = valueString.split("-").join("");
+        if (!valueString.startsWith("+1") && !valueString.startsWith("1")) {
+            valueString = `+1 ${valueString}`;
+            $(source).val(valueString);
         }
     }
     changePresumedBorn(source) {
@@ -418,8 +463,8 @@ class WizardViewModel {
     }
     showFinalSummary() {
         let summaryContainer = "#summary";
-        let summaryHtml = new SummaryGenerator().generateSummary();
-        $(summaryContainer).append(summaryHtml);
+        let summaryHtml = SummaryGenerator.generateSummary().join(" <br/>");
+        $(summaryContainer).text("").append(summaryHtml);
     }
     GetViewComponents(selecter) {
         let steps = $(this.WizardComponent)
@@ -466,8 +511,15 @@ class CountryManager {
     }
 }
 class SummaryGenerator {
-    generateSummary() {
-        let formData = $("#appointmentForm")
+    static generateSummary() {
+        var _a;
+        let formElement = $("#appointmentForm");
+        let numCardField = formElement.find('name="num_carte_consulaire"');
+        if (((_a = numCardField.val()) === null || _a === void 0 ? void 0 : _a.toString().trim().toUpperCase().startsWith("CA")) == false) {
+            numCardField.val(`CA${numCardField.val()}`);
+        }
+        let formData = formElement
+            .find(".included")
             .serializeArray()
             .filter((item) => {
             return item.value.trim().length > 0 && item.name.trim().toLowerCase() != "disponibilite";
@@ -480,7 +532,8 @@ class SummaryGenerator {
         let formattedSummary = formData.map((summaryItem) => {
             return `<strong> ${summaryItem.name.toUpperCase()} :</strong> ${summaryItem.value}`;
         });
-        return formattedSummary.join(" <br/>");
+        return formattedSummary;
+        // return formattedSummary.join(" <br/>");
     }
 }
 class FormManager {
@@ -490,7 +543,7 @@ class FormManager {
     handleFormSubmission(formId, summaryContainer) {
         $(formId).submit((event) => {
             event.preventDefault();
-            const summaryHtml = this.summaryGenerator.generateSummary();
+            const summaryHtml = SummaryGenerator.generateSummary().join(" <br/>");
             $(summaryContainer).html(summaryHtml);
         });
     }
@@ -610,6 +663,12 @@ class NavigationButtonHandler extends ButtonHandlerBase {
             let currentStep = parseInt($(btnElement).parents("[data-step]").first().attr("data-step"));
             let navigationTarget = isPreviousBtn ? currentStep - 1 : currentStep + 1;
             if (parent.hasClass("disabled") == false) {
+                // mark all Visible-Fields
+                let step = $(btnElement).parents("*[data-step]").first();
+                let visibleFields = $(step).find('input:visible, select:visible, textarea:visible, input[type="hidden"]');
+                let hiddenFields = $(step).find("input:hidden, select:hidden, textarea:hidden");
+                hiddenFields.removeClass("included");
+                visibleFields.addClass("included");
                 this.stepNavigator.navigateTo(navigationTarget);
             }
         });
