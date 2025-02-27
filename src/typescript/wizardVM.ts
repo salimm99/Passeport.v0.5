@@ -155,12 +155,12 @@ class WizardViewModel {
     // Submit button handling
     $("#submit").on("click", () => {
       let formElement = $("#appointmentForm");
-      let numCardField = formElement.find('name="num_carte_consulaire"');
+      /*  let numCardField = formElement.find('[name="num_carte_consulaire"]');
       if (numCardField.val()?.toString().trim().toUpperCase().startsWith("CA") == false) {
         numCardField.val(`CA${numCardField.val()}`);
       }
-
-      let formData = formElement
+*/
+      let formData = $("#appointmentForm")
         .find(".included")
         .serializeArray()
         .filter((item) => {
@@ -585,12 +585,12 @@ class CountryManager {
 class SummaryGenerator {
   static generateSummary(): string[] {
     let formElement = $("#appointmentForm");
-    let numCardField = formElement.find('name="num_carte_consulaire"');
+    /*  let numCardField = formElement.find('[name="num_carte_consulaire"]');
     if (numCardField.val()?.toString().trim().toUpperCase().startsWith("CA") == false) {
       numCardField.val(`CA${numCardField.val()}`);
     }
-
-    let formData = formElement
+*/
+    let formData = $("#appointmentForm")
       .find(".included")
       .serializeArray()
       .filter((item) => {
