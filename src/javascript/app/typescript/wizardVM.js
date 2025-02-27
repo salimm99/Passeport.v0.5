@@ -133,7 +133,7 @@ class WizardViewModel {
         stepNavigator.showStep(0);
         // Submit button handling
         $("#submit").on("click", () => {
-            let formElement = $("#appointmentForm");
+            //let formElement = $("#appointmentForm");
             /*  let numCardField = formElement.find('[name="num_carte_consulaire"]');
             if (numCardField.val()?.toString().trim().toUpperCase().startsWith("CA") == false) {
               numCardField.val(`CA${numCardField.val()}`);
